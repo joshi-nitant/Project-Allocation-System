@@ -1,0 +1,12 @@
+{% extends 'stu_dashboard/base_student.html' %}
+
+{% block body_block %}
+<h1>Are you sure you want to delete {{team_student}} ?</h1>
+
+<form method="post">
+  {% csrf_token %}
+  <input type="submit" name="delete" value="Delete">
+  <a href="{% url 'stu_dashboard:TeamList'%}">Cancel</a>
+</form>
+
+{% endblock %}

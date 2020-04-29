@@ -1,0 +1,100 @@
+{%load static %}
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        /* body {
+            margin: 32px;
+            padding: 16px;
+            width: auto;
+            font-family: sans-serif;
+        }
+
+        ul {
+            list-style-type: none;
+            width: auto;
+        }
+
+        li {
+            padding: 16px;
+            background-color: #f2f2f2;
+            border-radius: 8px;
+        }
+
+        .list {
+            display: grid;
+          grid-gap: 16px;
+          width: auto;
+            height: auto;
+            grid-template-columns: 1fr;
+        }
+
+        .order {
+            font-size: 32px!important;
+            margin: 4px;
+            opacity: 0.36;
+            cursor: pointer;
+        }
+
+        #up:hover {
+            color: green;
+            opacity: 1;
+        }
+
+        #down:hover {
+            color: red;
+            opacity: 1;
+        }
+
+        .content {
+            position: absolute;
+            margin-top: 14px;
+            margin-left: 16px;
+        }
+
+        #l1 {
+            grid-row-start: 2;
+        }
+
+        #pos-1 {
+            grid-row-start: 1;
+        }
+
+        #pos-2 {
+            grid-row-start: 2;
+        }
+
+        #pos-3 {
+            grid-row-start: 3;
+        }
+
+        #pos-4 {
+            grid-row-start: 4;
+        }
+
+        #pos-5 {
+            grid-row-start: 5;
+        }
+
+        #pos-6 {
+            grid-row-start: 6;
+        } */
+
+    </style>
+    <!-- <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">-->
+    <title>Project Allocation System</title>
+  </head>
+  <body>
+    <header>
+      <ul>
+        <li><a href="{%url 'stu_dashboard:dashboard'%}">Home</a></li>
+        <li><a href="{% url 'logout' %}">Logout</a></li>
+      </ul>
+    </header>
+
+    {% block body_block %}
+    {% endblock %}
+  </body>
+</html>

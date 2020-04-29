@@ -1,0 +1,10 @@
+{% extends 'stu_dashboard/base_student.html' %}
+
+{% block body_block %}
+
+  <form method="post">
+    {% csrf_token %}
+    {{form.as_p}}
+    <input type="submit" value="Add Preference">
+  </form>
+{% endblock %}

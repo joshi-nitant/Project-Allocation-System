@@ -1,0 +1,67 @@
+{% extends 'stu_dashboard/base_student.html' %}
+{% block body_block %}
+
+{% if msg %}
+{{msg}}
+<h2>Click <a href="{% url 'stu_dashboard:TeamAdd' %}">Here</a> to create a team for this subject in which you will be a leader....</h2>
+{% else %}
+<table border="2">
+  <tr>
+      <th>Leader Name</th>
+      {% if is_leader %}
+      <th>Change Leader</th>
+      <th>Delete</th>
+      {% endif %}
+  </tr>
+  <tr>
+    <td>{{leader}}</td>
+    {% if is_leader%}
+    <td><a href="{% url 'stu_dashboard:ChangeLeader' pk=leader.team_id_id %}">Change</a></td>
+    <td><a href="{%url 'stu_dashboard:DeleteMember' pk=leader.id %}">Delete</a></td>
+    {% endif %}
+  </tr>
+  <tr>
+
+  </tr>
+  <tr>
+    <th>Memeber Name</th>
+    {% if is_leader %}
+    <th>Change Memeber</th>
+    <th>Delete</th>
+    {% endif %}
+  </tr>
+  {% for member in member_list %}
+  <tr>
+    <td>{{member}}</td>
+    {% if is_leader %}
+    <td><a href="{% url 'stu_dashboard:UpdateMember' pk=member.id %}">Change</a></td>
+        {% if disable_delete%}
+          <td><a>Delete</a></td>
+        {% else %}
+          <td><a href="{%url 'stu_dashboard:DeleteMember' pk=member.id %}">Delete</a></td>
+        {% endif %}
+    {% endif %}
+  </tr>
+  {% endfor %}
+</table>
+  {% if is_leader %}
+      {% if disable_add %}
+        <a>Add Member</a>
+      {% else %}
+        <a href="{% url 'stu_dashboard:TeamAdd' %}">Add Member</a>
+      {% endif %}
+  {% endif %}
+
+{% if disable_delete %}
+    <p color=red>Since you already have minimum member you can no longer delete any Memeber</p>
+{% endif %}
+
+{% if disable_add %}
+    <p color=red>Since you already have maxmimum team member you can no longer add any Memeber</p>
+{% endif %}
+
+{% if is_leader %}
+  <p>Note that:Deleting team leader will result into deletion of entire team along with prefernces</p>
+{% endif  %}
+{% endif %}
+{% endblock %}

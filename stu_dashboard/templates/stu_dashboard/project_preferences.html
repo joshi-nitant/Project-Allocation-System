@@ -1,0 +1,92 @@
+{% extends 'stu_dashboard/base_student.html' %}
+{% block body_block %}
+
+<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+
+
+<table border="2" id="sortable">
+      <tr>
+        <th>Priority</th>
+        <th>Title</th>
+        {% if is_leader %}
+        <th>Change Priority</th>
+        <th>Delete</th>
+        {% endif %}
+      </tr>
+
+      {% for preference in prefernce_list %}
+      <tr class="list-item" pos="{{forloop.counter}}" id="pos-{{forloop.counter}}">
+        <td>{{preference.prefernce}}</td>
+        <td>{{preference}}</td>
+        {% if is_leader %}
+          <td>
+              <i class="material-icons order" id="up">keyboard_arrow_up</i>
+              <i class="material-icons order" id="down">keyboard_arrow_down</i>
+          </td>
+          {% if disable_delete %}
+            <td><a>Delete</a></td>
+          {% else %}
+            <td><a href="{% url 'stu_dashboard:DeletePreference' pk=preference.pk %}">Delete</a></td>
+          {% endif %}
+        {% endif %}
+      </tr>
+      {% endfor %}
+    </table>
+
+    {% if is_leader %}
+        <a href="#">SAVE PREFERNCE</a>
+    {% endif %}
+    {% if is_leader %}
+      {% if disable_add %}
+        <a>ADD PREFERNCE</a>
+      {% else %}
+        <a href="{% url 'stu_dashboard:AddProject'%}">Add your own preference</a>
+      {% endif %}
+    {% endif %}
+
+    <script>
+        window.onclick = e => {
+
+            var type = e.target.getAttribute('id');
+            var li = e.target.parentElement;
+            var parent = e.target.parentElement.getAttribute('pos');
+
+            changePos( type, parent, li);
+
+            function changePos( to, pos, li) {
+                if ( to == "up") {
+
+                    if ( pos != 1 ) {
+                        var p = pos;
+                        var v = "pos-"+(--pos);
+                        var pre = document.querySelector("#"+v);
+
+                        li.setAttribute('id',v);
+                        li.setAttribute('pos', pos);
+                        changePos("down", (--p), pre);
+                    }
+                    console.log("Up");
+                }
+
+                if ( to == "down") {
+
+                    // Change value of max as par iteam limit
+                    var max = {{current_preference}};
+
+                    if ( pos != max ) {
+                        var p = pos;
+                        var v = "pos-"+(++pos);
+                        var next = document.querySelector("#"+v);
+
+                        li.setAttribute('id',v);
+                        li.setAttribute('pos', pos);
+                        changePos("up", (++p), next);
+                    }
+                    console.log("Down");
+                }
+            }
+        }
+    </script>
+
+{% endblock %}

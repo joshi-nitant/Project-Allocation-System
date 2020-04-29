@@ -1,0 +1,140 @@
+{% extends 'stu_dashboard/base_student.html' %}
+
+
+{% block body_block %}
+    <h1>RULES</h1>
+  <table border="2">
+    <tr>
+      <th>Minimum Team Member</th>
+      <th>Maximum Team Member</th>
+      <th>Cross Batch Allowed?</th>
+      <th>Cross Division Allowed?</th>
+      <th>Last Date</th>
+    </tr>
+
+    {% for project_rule in project_rules %}
+    <tr>
+      <td>{{ project_rule.min_team }}</td>
+      <td>{{ project_rule.max_team }}</td>
+      <td>{{ project_rule.is_cross_batch }}</td>
+      <td>{{ project_rule.is_cross_divsion }}</td>
+      <td>{{ project_rule.last_date }}</td>
+    </tr>
+    {% endfor %}
+  </table>
+  <h2>List</h2>
+  <form action="{% url 'stu_dashboard:preferencelist' %}" method="post" id="projectForm" onsubmit="return checkForm()">
+    <table border="2">
+      <tr>
+        <th>Sr No.</th>
+        <th>Title</th>
+        <th>Description</th>
+        <th>Select</th>
+      </tr>
+
+      {% for project in project_list %}
+        <tr>
+          <td>{{forloop.counter|add:current_page }}</td>
+          <td>{{project.title}}</td>
+          <td>{{project.description}}</td>
+          {% if project.is_allocated %}
+            <td><input type="checkbox" name="alloated_project" value="{{project}}" id="{{project}}" disabled checked ></td>
+          {% else %}
+            <td><input type="checkbox" name="project_list[]" value="{{project.pk}}" id="{{project}}"onchange="fun(id)"></td>
+          {% endif %}
+        </tr>
+
+      {% endfor %}
+    </table>
+    <input type="submit" value="Submit">
+    <br>
+    {% if is_paginated %}
+               {% if page_obj.has_previous %}
+                  <a href="?page={{ page_obj.previous_page_number }}">previous</a>
+               {% endif %}
+                   Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+               {% if page_obj.has_next %}
+                   <a href="?page={{ page_obj.next_page_number }}">next</a>
+               {% endif %}
+   {% endif %}
+   <br>
+    <a href="{% url 'stu_dashboard:TeamList' %}">Team</a>
+    {% if messages %}
+      {% for message in messages%}
+        <p>{{message}}</p>
+      {% endfor %}
+    {% endif %}
+    {% csrf_token %}
+    <input type="hidden" name="next" value="{{request.get_full_path}}">
+  </form>
+
+  <a href="{% url 'stu_dashboard:preferencelist'%}">Preference</a><br>
+  <a href="{% url 'stu_dashboard:AddProject'%}">Add your own preference</a>
+  <a href="{% url 'stu_dashboard:Allocated'%}">Allocated Project</a>
+
+  <br>
+
+  <script type="text/javascript">
+      var members = document.forms['projectForm'].elements[ 'project_list[]' ];
+      let min = 0;
+      var min_member = 1;
+      var max_member = {{allowed_project}};
+      let count = 0;
+      // let chk1 = document.getElementById("chk1");
+      // let chk2 = document.getElementById("chk2");
+      // let chk3 = document.getElementById("chk3");
+      // let chk4 = document.getElementById("chk4");
+      // let chk5 = document.getElementById("chk5");
+
+      function fun(id) {
+          let chk = document.getElementById(id);
+
+          if(chk.checked == true){
+              count++;
+              min++;
+          }
+          else{
+              count--;
+              min--;
+          }
+          checkMax()
+      }
+
+      function checkMax(){
+        var members_list;
+
+        if (typeof members.length == 'undefined'){
+          members_list = [members];
+        }else{
+          members_list = members;
+        }
+
+        if(count >= max_member) {
+            for (var i=0, len=members_list.length; i<len; i++) {
+              if(members_list[i].checked==false)
+                members_list[i].disabled=true;
+            }
+        }
+        else{
+          for (var i=0,len=members_list.length; i<len; i++) {
+              members_list[i].disabled=false;
+          }
+        }
+
+      }
+
+      function checkForm() {
+          if(min < min_member)
+              {
+                  alert("Insufficient definition selection"); //alert pop-up
+                  return false;
+                }
+          return true;
+      }
+
+      window.onload = function() {
+            checkMax();
+       }
+
+  </script>
+{% endblock %}

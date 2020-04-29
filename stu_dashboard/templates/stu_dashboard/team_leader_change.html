@@ -1,0 +1,81 @@
+{% extends 'stu_dashboard/base_student.html' %}
+{% block body_block %}
+  <h1>Select the next team leader</h1>
+  <h3>Note that you will loose all the rights for this team</h3>
+
+{% if no_member %}
+  <h1>Sorry You Don't Have Any Team Member to assigned as leader</h1>
+{% else %}
+  <form action="{% url 'stu_dashboard:FinalLeader' %}" method="post" id="leaderForm">
+    <table border="2">
+      <tr>
+        <th>Memeber</th>
+        <th>Leader?</th>
+      </tr>
+
+      {% for member in team_member %}
+      <tr>
+        <td>{{member}}</td>
+        <td>Leader<input type="checkbox" name="new_leader[]" value="{{member.pk}}" id="{{member}}" onchange="fun(id)"></td>
+      </tr>
+      {% endfor %}
+
+    </table>
+    <input type="submit" value="Change Leader">
+    {% csrf_token %}
+  </form>
+  <script type="text/javascript">
+      var members = document.forms['leaderForm'].elements[ 'new_leader[]' ];
+      var max_member = 1;
+      let count = 0;
+      // let chk1 = document.getElementById("chk1");
+      // let chk2 = document.getElementById("chk2");
+      // let chk3 = document.getElementById("chk3");
+      // let chk4 = document.getElementById("chk4");
+      // let chk5 = document.getElementById("chk5");
+
+      function fun(id) {
+          console.log("Hello");
+          let chk = document.getElementById(id);
+
+          if(chk.checked == true){
+              count++;
+          }
+          else{
+              count--;
+          }
+          checkMax()
+      }
+
+      function checkMax(){
+        var members_list;
+        if (typeof members.length == 'undefined'){
+          members_list = [members];
+        }else{
+          members_list = members;
+        }
+        console.log(count)
+        console.log(max_member)
+
+
+        if(count >= max_member) {
+            for (var i=0, len=members_list.length; i<len; i++) {
+              if(members_list[i].checked==false)
+                members_list[i].disabled=true;
+            }
+        }
+        else{
+          for (var i=0,len=members_list.length; i<len; i++) {
+              members_list[i].disabled =false;
+          }
+        }
+
+      }
+
+      window.onload = function() {
+            checkMax();
+       }
+
+  </script>
+{% endif %}
+{% endblock %}
